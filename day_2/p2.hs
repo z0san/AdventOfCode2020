@@ -6,7 +6,7 @@ import Data.Char (isDigit)
 
 main = do
     args <- getArgs
-    contents <- readFile (args !! 0)
+    contents <- readFile $ head args
     let list = lines contents
     putStrLn "starting..."
     let parsed = map parse list
