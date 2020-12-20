@@ -9,10 +9,12 @@ main = do
   args <- getArgs
   contents <- readFile $ head args
   let rules = map (\x -> split " " x []) (lines contents)
-  print $ map (map reverse) rules
+  let parsed = map (reverse . map reverse) rules
+  print $ map (take 2) parsed
+  print $ map (take 1 . drop 4) parsed
 
 
-data Node = Leaf | Int Node Node
+data Node = Leaf | Int (Int, Node) (Int, Node)
 
 
 split :: [Char] -> [Char] -> [[Char]] -> [[Char]]
