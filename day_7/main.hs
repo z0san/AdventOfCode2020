@@ -3,6 +3,7 @@
 import System.IO
 import Control.Monad
 import System.Environment
+-- import Data.Map.Strict (singleton, lookup)
 
 
 main = do
@@ -11,21 +12,25 @@ main = do
   let rules = map (\x -> split " " x []) (lines contents)
   let parsed = map (reverse . map reverse) rules
   -- print $ map (take 1 . drop 4) parsed
-  -- let allColors = map (take 2) parsed
+  let allColors = map (take 2) parsed
   -- print allColors
   -- let numbers = map (map $ map alphaLoc) allColors
   -- let singleNum = map (map sum) numbers 
   -- print $ map sum singleNum
   
-  -- let keys = map (\[x1,x2] -> x1 ++ x2) allColors
+  let keys = map (\[x1,x2] -> x1 ++ x2) allColors
   -- print keys
 
   -- checks for uniqueness fo rules which is true
   -- print [x | (loc2, x) <- zip [0..] keys, (loc1, y) <- zip [0..] keys, y ==x, loc1 /= loc2]
   print $ head parsed
   let [color1, color2, _, _, count1, childFront1, childFront2, _, count2, childBack1, childBack2, _] = head parsed
-  putStrLn (showNode (constructNode $ head parsed))
-
+  let nodes = map constructNode parsed
+  -- putStrLn (showNode $ head nodes)
+  -- putStrLn (foldl (\y x -> showNode x ++ y) "" nodes)
+  -- print $ showNode $ lookup "TEST" (singleton "TEST" (Maybe (head nodes)))
+  let Just e = lookup "brightwhite" (zip keys nodes)
+  print $ showNode e
 
 data Node = Leaf | Node String (Int, Node) (Int, Node)
 
@@ -54,6 +59,11 @@ constructNode [color1, color2, _, _, count1, childFront1, childFront2, _, count2
   Node (color1 ++ color2)
     (readInt count1, constructNode [childFront1, childFront2])
     (readInt count2, constructNode [childBack1, childBack2])
+-- constructing node with one child from rule
+constructNode [color1, color2, _, _, count1, childFront1, childFront2, _] =
+  Node (color1 ++ color2)
+    (readInt count1, constructNode [childFront1, childFront2])
+    (0, Leaf)
 
 -- used for printing out trees
 showNode :: Node -> String
