@@ -29,8 +29,11 @@ main = do
   -- putStrLn (showNode $ head nodes)
   -- putStrLn (foldl (\y x -> showNode x ++ y) "" nodes)
   -- print $ showNode $ lookup "TEST" (singleton "TEST" (Maybe (head nodes)))
-  let Just e = lookup "brightwhite" (zip keys nodes)
-  print $ showNode e
+  let stringToNode = zip keys nodes
+  let Just e = lookup "brightwhite" stringToNode
+  putStrLn (showNode e)
+  print keys
+  print $ removeItem " brightwite" keys
 
 data Node = Leaf | Node String (Int, Node) (Int, Node)
 
@@ -44,6 +47,13 @@ split key toSplit carry =
     split key (drop (length key) toSplit) ([]:carry)
   else
     split key (tail toSplit) ((head toSplit : head carry) : tail carry)
+
+-- used to remove an element from an array
+removeItem :: String -> [String] -> [String]
+removeItem _ [] = []
+removeItem toRemove (x:xs) =
+  if x == toRemove then xs
+  else x : removeItem toRemove xs
 
 
 -- used to construct trees from rule
